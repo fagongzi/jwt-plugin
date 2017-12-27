@@ -64,6 +64,7 @@ func (f *JWTFilter) Init(cfg string) error {
 		f.getter = jwtFromCookie(parts[1])
 	}
 
+	f.cfg.secretBytes = []byte(f.cfg.Secret)
 	return nil
 }
 
