@@ -25,7 +25,7 @@ type JWTCfg struct {
 	Secret      string `json:"secret"`
 	TokenLookup string `json:"tokenLookup"`
 	AuthScheme  string `json:"authScheme"`
-	ContextKey  string `json:"contextKey"`
+	HeadPrefix  string `json:"headPrefix"`
 	secretBytes []byte
 }
 
@@ -89,7 +89,10 @@ func (f *JWTFilter) Pre(c filter.Context) (statusCode int, err error) {
 		return fasthttp.StatusForbidden, err
 	}
 
-	c.SetAttr(f.cfg.ContextKey, claims)
+	for key, value := range claims {
+		c.OriginRequest().Request.Header.Add(fmt.Sprintf("%s%s", f.cfg.HeadPrefix, key), fmt.Sprintf("%v", value))
+	}
+
 	return f.BaseFilter.Pre(c)
 }
 

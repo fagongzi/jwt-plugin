@@ -1,0 +1,6 @@
+{
+    "secret": "123456",
+    "tokenLookup": "header:Authorization",
+    "authScheme": "Bearer",
+    "headPrefix": "jwt_"
+}
