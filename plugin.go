@@ -70,12 +70,12 @@ func (f *JWTFilter) Init(cfg string) error {
 
 // Name name
 func (f *JWTFilter) Name() string {
-	return "jwt"
+	return "JWT"
 }
 
 // Pre execute before proxy
 func (f *JWTFilter) Pre(c filter.Context) (statusCode int, err error) {
-	if c.API().AuthFilter != f.Name() {
+	if strings.ToUpper(c.API().AuthFilter) != f.Name() {
 		return f.BaseFilter.Pre(c)
 	}
 
@@ -90,7 +90,7 @@ func (f *JWTFilter) Pre(c filter.Context) (statusCode int, err error) {
 	}
 
 	for key, value := range claims {
-		c.OriginRequest().Request.Header.Add(fmt.Sprintf("%s%s", f.cfg.HeadPrefix, key), fmt.Sprintf("%v", value))
+		c.ForwardRequest().Header.Add(fmt.Sprintf("%s%s", f.cfg.HeadPrefix, key), fmt.Sprintf("%v", value))
 	}
 
 	return f.BaseFilter.Pre(c)
